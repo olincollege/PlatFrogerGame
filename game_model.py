@@ -2,6 +2,7 @@ import pygame as pg
 import random
 from settings import *
 from sprites import *
+from os import path
 
 
 class Game:
@@ -21,10 +22,28 @@ class Game:
 
         # Start running the program loop (NOT the game loop).
         self.running = True
+        self.font_name = pg.font.match_font(FONT_NAME)
+        self.load_data()
+
+    def load_data(self):
+        """
+        Helper function for loading data
+        """
+
+        #load high score
+        self.dir = path.dirname(__file__)
+        with open(path.join(self.dir, HS_FILE), 'w') as f:
+            try:
+                self.highscore = int(f.read())
+
+            #if the file is empty, try will give an error
+            except:
+                self.highscore = 0
 
     def new(self):
         # Start a new game.
-
+        #starting score
+        self.score = 0
         # Create sprite groups.
         self.all_sprites = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
@@ -92,26 +111,107 @@ class Game:
                 self.player.pos.y = hits[0].rect.top
                 self.player.vel.y = 0
 
+            #if player reaches top fourth of screen
+        if self.player.rect.top  <= HEIGHT/4:
+            self.player.pos.y += abs(self.player.vel.y)
+            for plat in self.platforms:
+                plat.rect.y += abs(self.player.vel.y)
+                if plat.rect.top >= HEIGHT:
+                    plat.kill()
+                    self.score += 10
+
+        #spawn new platforms tokeep same avg number
+        while len(self.platforms) < 6:
+            width = random.randrange(50,100)
+            p = Platform(random.randrange(0, WIDTH-width),
+                        random.randrange(-75, -30), width, 20)
+            self.platforms.add(p)
+            self.all_sprites.add(p)
+
+        #we die
+        if self.player.rect.bottom > HEIGHT:
+            for sprite in self.all_sprites:
+                sprite.rect.y -= max(self.player.vel.y, 10)
+                if sprite.rect.bottom < 0:
+                    sprite.kill()
+        if len(self.platforms) == 0:
+            self.playing = False
 
     def draw(self):
         # Draw game loop.
         #VIEW
 
         # Fill display with empty black screen.
-        self.screen.fill(BLACK)
+        self.screen.fill(BGCOLOUR)
 
         # Draw all the sprites.
         self.all_sprites.draw(self.screen)
 
-        # 'Flip' display to show updated sprites.
+        # Show score
+        self.draw_text(str(self.score), 22, WHITE, WIDTH/2, 15)
+
+        # 'Flip' display to show updated view.
         pg.display.flip()
 
     def show_start_screen(self):
         # Show game start screen.
         #VIEW
-        pass
+        self.screen.fill(BGCOLOUR)
+        self.draw_text(TITLE, 48, WHITE, WIDTH/2, HEIGHT/4)
+        self.draw_text("Arrows to move, Space to jump", 22, WHITE,
+                        WIDTH/2, HEIGHT/2)
+        self.draw_text("Press any key to play", 22, WHITE, WIDTH/2, HEIGHT*3/4)
+        self.draw_text(f"High Score: {self.highscore}", 22, WHITE, WIDTH/2, 15)
+        pg.display.flip()
+        self.wait_for_key()
+
+    def wait_for_key(self):
+        """
+        Waits for key to be pressed before starting game (start screen)
+        """
+        waiting = True
+        while waiting:
+            self.clock.tick(FPS)
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    waiting = False
+                    self.running = False
+                if event.type == pg.KEYUP:
+                    waiting = False
 
     def show_go_screen(self):
         # Show game over screen.
         #VIEW
-        pass
+
+        #Check that game is running before displaying screen
+        if not self.running:
+            return
+
+        #GO display
+        self.screen.fill(BGCOLOUR)
+        self.draw_text("GAME OVER", 48, WHITE, WIDTH/2, HEIGHT/4)
+        self.draw_text(f"Score: {self.score}", 22, WHITE,
+                        WIDTH/2, HEIGHT/2)
+        self.draw_text("Press any key to play again", 22, WHITE, WIDTH/2,
+                        HEIGHT*3/4)
+
+        if self.score > self.highscore:
+            self.highscore = self.score
+            self.draw_text("NEW HIGH SCORE!", 22, WHITE, WIDTH/2, HEIGHT/2 + 40)
+
+            #save high score in file
+            with open(path.join(self.dir, HS_FILE), 'w') as f:
+                f.write(str(self.score))
+        else:
+            self.draw_text(f"High Score: {self.highscore}", 22, WHITE,
+                            WIDTH/2, HEIGHT/2 +40)
+
+        pg.display.flip()
+        self.wait_for_key()
+
+    def draw_text(self, text, font_size, colour, x, y):
+        font = pg.font.Font(self.font_name, font_size)
+        text_surface = font.render(text, True, colour)
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (x,y)
+        self.screen.blit(text_surface, text_rect)

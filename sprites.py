@@ -32,7 +32,7 @@ class Players(pg.sprite.Sprite):
         if hits:
 
             # Jump.
-            self.vel.y = -20
+            self.vel.y = -PLAYER_JUMP
 
     def update(self):
         # Include gravity in the game.
