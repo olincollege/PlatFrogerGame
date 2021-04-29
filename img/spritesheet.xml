@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker https://www.codeandweb.com/texturepacker -->
+<!-- $TexturePacker:SmartUpdate:e94edbad59e65b04fac696f41208176a:9debdb4141b9378e896b718366f790f2:ef7663426bf705b25566a93aef3a1571$ -->
+<!--Format:
+n  => name of the sprite
+x  => sprite x pos in texture
+y  => sprite y pos in texture
+w  => sprite width (may be trimmed)
+h  => sprite height (may be trimmed)
+pX => x pos of the pivot point (relative to sprite width)
+pY => y pos of the pivot point (relative to sprite height)
+oX => sprite's x-corner offset (only available if trimmed)
+oY => sprite's y-corner offset (only available if trimmed)
+oW => sprite's original width (only available if trimmed)
+oH => sprite's original height (only available if trimmed)
+r => 'y' only set if sprite is rotated
+with polygon mode enabled:
+vertices   => points in sprite coordinate system (x0,y0,x1,y1,x2,y2, ...)
+verticesUV => points in sheet coordinate system (x0,y0,x1,y1,x2,y2, ...)
+triangles  => sprite triangulation, 3 vertex indices per triangle
+-->
+<TextureAtlas imagePath="spritesheet.png" width="484" height="397">
+    <sprite n="gameover.png" x="1" y="178" w="410" h="96"/>
+    <sprite n="jumpleft.png" x="1" y="282" w="80" h="90" r="y"/>
+    <sprite n="jumpright.png" x="403" y="282" w="80" h="90" r="y"/>
+    <sprite n="largeplatform.png" x="83" y="276" w="318" h="68"/>
+    <sprite n="lookleft.png" x="83" y="346" w="64" h="50"/>
+    <sprite n="lookright.png" x="149" y="346" w="64" h="50"/>
+    <sprite n="prepleft.png" x="413" y="178" w="66" h="50"/>
+    <sprite n="prepright.png" x="413" y="230" w="66" h="50"/>
+    <sprite n="smallplatform.png" x="215" y="346" w="136" h="40"/>
+    <sprite n="title.png" x="1" y="1" w="465" h="175" oX="0" oY="2" oW="465" oH="177"/>
+</TextureAtlas>
