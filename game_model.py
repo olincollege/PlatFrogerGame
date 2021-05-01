@@ -4,6 +4,9 @@ from settings import *
 from sprites import *
 from os import path
 
+# House In a Forest by https://opengameart.org/users/horrorpen
+# forest by https://opengameart.org/users/syncopika
+
 
 class Game:
     def __init__(self):
@@ -45,6 +48,10 @@ class Game:
         #load spritesheet
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
 
+        # Load sounds.
+        self.snd_dir = path.join(self.dir, 'snd')
+        self.jump_sound = pg.mixer.Sound(path.join(self.snd_dir, 'PacificTreeFrog.wav'))
+
     def new(self):
         # Start a new game.
         #starting score
@@ -62,9 +69,15 @@ class Game:
             p = Platform(self, *plat)
             self.all_sprites.add(p)
             self.platforms.add(p)
+
+        # load music. We could do different music themes, maybe creepy forest
+        # after a certain score with background change.
+        pg.mixer.music.load(path.join(self.snd_dir, 'forest.ogg'))
         self.run()
 
     def run(self):
+
+        pg.mixer.music.play(loops=-1)
         # Start running the game loop.
         self.playing = True
 
@@ -83,6 +96,8 @@ class Game:
             # Draw (render) the changes.
             self.draw()
 
+        pg.mixer.music.fadeout(500)
+
     def events(self):
         # Events in game loop.
         #CONTROLLER
@@ -99,7 +114,12 @@ class Game:
             # Check for space key for jumping.
             if event.type == pg.KEYDOWN:
                if event.key == pg.K_SPACE:
+
                    self.player.jump()
+
+            if event.type == pg.KEYUP:
+               if event.key == pg.K_SPACE:
+                   self.player.jump_cut()
 
     def update(self):
         # Update Game Loop.
@@ -113,8 +133,17 @@ class Game:
             hits = pg.sprite.spritecollide(self.player, self.platforms, False)
 
             if hits:
-                self.player.pos.y = hits[0].rect.top
-                self.player.vel.y = 0
+                lowest = hits[0]
+                for hit in hits:
+                    if hit.rect.bottom > lowest.rect.bottom:
+                        lowest = hit
+
+                if self.player.pos.x < lowest.rect.right and \
+                self.player.pos.x > lowest.rect.left:
+                    if self.player.pos.y < lowest.rect.centery:
+                        self.player.pos.y = lowest.rect.top
+                        self.player.vel.y = 0
+                        self.player.jumping = False
 
             #if player reaches top fourth of screen
         if self.player.rect.top  <= HEIGHT/4:
@@ -161,6 +190,9 @@ class Game:
     def show_start_screen(self):
         # Show game start screen.
         #VIEW
+        pg.mixer.music.load(path.join(self.snd_dir, 'startEndScreen.ogg'))
+        pg.mixer.music.play(loops=-1)
+
         self.screen.fill(LIGHTGREEN)
         self.image = self.spritesheet.get_image(1, 1, 465, 175, scale=0.9)
         self.image.set_colorkey(BLACK)
@@ -174,6 +206,8 @@ class Game:
         self.draw_text(f"High Score: {self.highscore}", 22, GREEN, WIDTH/2, 15)
         pg.display.flip()
         self.wait_for_key()
+        pg.mixer.music.fadeout(500)
+
 
     def wait_for_key(self):
         """
@@ -192,7 +226,8 @@ class Game:
     def show_go_screen(self):
         # Show game over screen.
         #VIEW
-
+        pg.mixer.music.load(path.join(self.snd_dir, 'startEndScreen.ogg'))
+        pg.mixer.music.play(loops=-1)
         #Check that game is running before displaying screen
         if not self.running:
             return
@@ -223,6 +258,7 @@ class Game:
 
         pg.display.flip()
         self.wait_for_key()
+        pg.mixer.music.fadeout(500)
 
     def draw_text(self, text, font_size, colour, x, y):
         font = pg.font.Font(self.font_name, font_size)

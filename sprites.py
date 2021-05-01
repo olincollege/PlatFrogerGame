@@ -41,8 +41,8 @@ class Players(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         # Initialize sprite's position, velocity, and acceleration vectors.
-        self.rect.center = (WIDTH / 2, HEIGHT / 2)
-        self.pos = vec(WIDTH / 2, HEIGHT / 2)
+        self.rect.center = (100, HEIGHT - 50)
+        self.pos = vec(100, HEIGHT - 50)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
 
@@ -73,8 +73,15 @@ class Players(pg.sprite.Sprite):
         self.rect.y += 2
         hits = pg.sprite.spritecollide(self, self.game.platforms, False)
         self.rect.y -= 2
-        if hits:
+        if hits and not self.jumping:
+            self.game.jump_sound.play()
+            self.jumping = True
             self.vel.y = -PLAYER_JUMP
+
+    def jump_cut(self):
+        if self.jumping:
+            if self.vel.y < -3:
+                self.vel.y = -3
 
     def update(self):
         self.animate()
@@ -97,16 +104,16 @@ class Players(pg.sprite.Sprite):
         self.vel += self.acc
 
         # Set low velocities to zero.
-        if abs(self.vel.x) < 0.02:
+        if abs(self.vel.x) < 0.1:
             self.vel.x = 0
         self.pos += self.vel + 0.5 * self.acc
 
         # Make sprite wrap around screen.
-        if self.pos.x < 0:
-            self.pos.x = WIDTH
+        if self.pos.x < 0  - self.rect.width / 2:
+            self.pos.x = WIDTH + self.rect.width / 2
 
-        if self.pos.x > WIDTH:
-            self.pos.x = 0
+        if self.pos.x > WIDTH  + self.rect.width / 2:
+            self.pos.x = 0  - self.rect.width / 2
 
         # Set sprite position.
         self.rect.midbottom = self.pos
@@ -117,14 +124,14 @@ class Players(pg.sprite.Sprite):
         """
         #walking conditions
         now = pg.time.get_ticks()
-        if self.vel.x != 0:
+        if abs(self.vel.x) >= 0.5:
             self.walking = True
         else:
             self.walking = False
 
         # Walking animation
         if self.walking:
-            if now - self.last_update > 150:
+            if now - self.last_update > 100:
                 self.last_update = now
                 self.current_frame = (self.current_frame + 1) % len(self.walk_frames_l)
                 bottom = self.rect.bottom
