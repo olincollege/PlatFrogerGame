@@ -53,8 +53,12 @@ class Players(pg.sprite.Sprite):
 
         self.walk_frames_r = [self.game.spritesheet.get_image(413, 230, 66, 50),
                             self.game.spritesheet.get_image(149, 346, 64, 50)]
-        self.jump_r = self.game.spritesheet.get_image(403, 282, 80, 90)
-        self.jump_l = self.game.spritesheet.get_image(1, 282, 80, 90)
+        self.jump_r = self.game.spritesheet.get_image(403, 282, 80, 90, scale=1.2)
+        self.jump_r = pg.transform.flip(self.jump_r, False, False)
+        self.jump_r = pg.transform.rotate(self.jump_r, 90)
+
+        self.jump_l = pg.transform.flip(self.jump_r, True, False)
+
 
         self.jump_l.set_colorkey(BLACK)
         self.jump_r.set_colorkey(BLACK)
@@ -130,15 +134,33 @@ class Players(pg.sprite.Sprite):
             self.walking = False
 
         # Walking animation
-        if self.walking:
-            if now - self.last_update > 100:
-                self.last_update = now
-                self.current_frame = (self.current_frame + 1) % len(self.walk_frames_l)
-                bottom = self.rect.bottom
-                if self.vel.x<0:
-                    self.image = self.walk_frames_l[self.current_frame]
-                else:
-                    self.image = self.walk_frames_r[self.current_frame]
+        if self.jumping:
+            # self.last_update = now
+            # self.current_frame = (self.current_frame + 1) % len(self.jump_l)
+            bottom = self.rect.bottom
+            if self.vel.x<0:
+                self.image = self.jump_l
+            else:
+                self.image = self.jump_r
+
+        elif self.walking:
+                if now - self.last_update > 100:
+                    self.last_update = now
+                    self.current_frame = (self.current_frame + 1) % len(self.walk_frames_l)
+                    bottom = self.rect.bottom
+                    if self.vel.x<0:
+                        self.image = self.walk_frames_l[self.current_frame]
+                    else:
+                        self.image = self.walk_frames_r[self.current_frame]
+        else:
+            if self.vel.x<0:
+                self.image = self.walk_frames_l[self.current_frame]
+            elif self.vel.x>0:
+                self.image = self.walk_frames_r[self.current_frame]
+            elif self.image == self.jump_l:
+                self.image = self.walk_frames_l[self.current_frame]
+            elif self.image == self.jump_r:
+                self.image = self.walk_frames_r[self.current_frame]
 
 
 class Platform(pg.sprite.Sprite):
@@ -151,7 +173,7 @@ class Platform(pg.sprite.Sprite):
 
         # Create platform sprite.
         self.images = [self.game.spritesheet.get_image(215, 346, 136, 40),
-                        self.game.spritesheet.get_image(83, 276, 318, 68)]
+                        self.game.spritesheet.get_image(83, 276, 318, 68, scale=0.8)]
 
         self.image = choice(self.images)
         self.image.set_colorkey(BLACK)
