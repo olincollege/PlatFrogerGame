@@ -9,7 +9,20 @@ from os import path
 
 
 class Game:
+    """
+    Class in charge of running the game
+
+    Attributes:
+        screen: sets the screen size and what is displayed on it
+        clock: the game clock- keeps track of how much time has passed
+        running: used to start the program loop
+        font_name: the font used for text
+    """
+
     def __init__(self):
+        """
+        Sets initial conditions for the Game class
+        """
         # Initialize game window.
         pg.init()
 
@@ -30,7 +43,8 @@ class Game:
 
     def load_data(self):
         """
-        Helper function for loading data
+        Helper function for loading data rom outside file (highscore,
+        spritesheet, etc.)
         """
 
         #load high score
@@ -53,7 +67,9 @@ class Game:
         self.jump_sound = pg.mixer.Sound(path.join(self.snd_dir, 'PacificTreeFrog.wav'))
 
     def new(self):
-        # Start a new game.
+        """
+        Starts a new game.
+        """
         #starting score
         self.score = 0
         # Create sprite groups.
@@ -76,7 +92,9 @@ class Game:
         self.run()
 
     def run(self):
-
+        """
+        Runs the game loop
+        """
         pg.mixer.music.play(loops=-1)
         # Start running the game loop.
         self.playing = True
@@ -99,6 +117,11 @@ class Game:
         pg.mixer.music.fadeout(500)
 
     def events(self):
+        """
+        Checks events in the game loop and changes attributes based on that
+        (i.e. if the event is QUIT, it quits the game by setting playing = False)
+        This is a controller element.
+        """
         # Events in game loop.
         #CONTROLLER
 
@@ -122,7 +145,9 @@ class Game:
                    self.player.jump_cut()
 
     def update(self):
-        # Update Game Loop.
+        """
+        Updates the game loop
+        """
         #CONTROLLER
 
         # Update all the sprites based on changes in sprites.py
@@ -145,7 +170,7 @@ class Game:
                         self.player.vel.y = 0
                         self.player.jumping = False
 
-            #if player reaches top fourth of screen
+        #if player reaches top fourth of screen, scroll
         if self.player.rect.top  <= HEIGHT/4:
             self.player.pos.y += max(abs(self.player.vel.y), 2)
             for plat in self.platforms:
@@ -162,7 +187,7 @@ class Game:
             self.platforms.add(p)
             self.all_sprites.add(p)
 
-        #we die
+        # If we die
         if self.player.rect.bottom > HEIGHT:
             for sprite in self.all_sprites:
                 sprite.rect.y -= max(self.player.vel.y, 10)
@@ -172,8 +197,9 @@ class Game:
             self.playing = False
 
     def draw(self):
-        # Draw game loop.
-        #VIEW
+        """
+        Displays and draws the game loop. This is a view element.
+        """
 
         # Fill display with empty black screen.
         self.screen.fill(BGCOLOUR)
@@ -181,6 +207,7 @@ class Game:
         # Draw all the sprites.
         self.all_sprites.draw(self.screen)
         self.screen.blit(self.player.image, self.player.rect)
+
         # Show score
         self.draw_text(str(self.score), 22, WHITE, WIDTH/2, 15)
 
@@ -188,18 +215,23 @@ class Game:
         pg.display.flip()
 
     def show_start_screen(self):
-        # Show game start screen.
+        """
+        Displays the game start screen
+        """
         #VIEW
+        #Start screen music
         pg.mixer.music.load(path.join(self.snd_dir, 'startEndScreen.ogg'))
         pg.mixer.music.play(loops=-1)
 
+        #Title & background displays
         self.screen.fill(LIGHTGREEN)
         self.image = self.spritesheet.get_image(1, 1, 465, 175, scale=0.9)
         self.image.set_colorkey(BLACK)
         self.title_rect = self.image.get_rect()
         self.title_rect.midtop = (WIDTH/2, HEIGHT/5)
         self.screen.blit(self.image, self.title_rect)
-        # self.draw_text(TITLE, 48, WHITE, WIDTH/2, HEIGHT/4)
+
+        # Draw start screen text
         self.draw_text("Arrows to move, Space to jump", 22, GREEN,
                         WIDTH/2, HEIGHT/2)
         self.draw_text("Press any key to play", 22, GREEN, WIDTH/2, HEIGHT*3/4)
@@ -224,27 +256,34 @@ class Game:
                     waiting = False
 
     def show_go_screen(self):
-        # Show game over screen.
-        #VIEW
+        """
+        Shows the game over screen.
+        """
+        #Music
         pg.mixer.music.load(path.join(self.snd_dir, 'startEndScreen.ogg'))
         pg.mixer.music.play(loops=-1)
+
         #Check that game is running before displaying screen
         if not self.running:
             return
 
-        #GO display
+        #GO title display
         self.screen.fill(LIGHTGREEN)
         self.image = self.spritesheet.get_image(1, 178, 410, 96)
         self.image.set_colorkey(BLACK)
         self.title_rect = self.image.get_rect()
         self.title_rect.midtop = (WIDTH/2, HEIGHT/5)
         self.screen.blit(self.image, self.title_rect)
-        # self.draw_text("GAME OVER", 48, WHITE, WIDTH/2, HEIGHT/4)
+
+        # Drawing text
         self.draw_text(f"Score: {self.score}", 22, GREEN,
                         WIDTH/2, HEIGHT/2)
         self.draw_text("Press any key to play again", 22, GREEN, WIDTH/2,
                         HEIGHT*3/4)
 
+        #Check for high score
+        # If there's a high score, display NEW HIGH SCORE, otherwise
+        #return the score and the high score
         if self.score > self.highscore:
             self.highscore = self.score
             self.draw_text("NEW HIGH SCORE!", 22, GREEN, WIDTH/2, HEIGHT/2 + 40)
@@ -261,6 +300,16 @@ class Game:
         pg.mixer.music.fadeout(500)
 
     def draw_text(self, text, font_size, colour, x, y):
+        """
+        Helper function used for drawing text.
+
+        Params:
+            text: a string representing the text we want to draw
+            font_size: the size of the font we want to use
+            colour: the colour of the font in RGB
+            x: the x position of the text on the screen
+            y: the y position of the text on the screen
+        """
         font = pg.font.Font(self.font_name, font_size)
         text_surface = font.render(text, True, colour)
         text_rect = text_surface.get_rect()

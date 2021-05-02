@@ -1,3 +1,7 @@
+"""
+This file is for storing constants. This makes it easy to change constants in
+the code without having to look through the code to where they were defined.
+"""
 # Game options/settings.
 TITLE = "PlatFrogs"
 WIDTH = 480
@@ -9,7 +13,7 @@ SPRITESHEET = "spritesheet.png"
 
 # Player movement properties.
 PLAYER_ACC = 0.7
-PLAYER_FRICTION = -0.12
+PLAYER_FRICTION = -0.13
 PLAYER_GRAVITY = 1
 PLAYER_JUMP = 20
 

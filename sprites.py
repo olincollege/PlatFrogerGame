@@ -4,13 +4,30 @@ from random import choice
 
 # Import vectors from pygame math module.
 vec = pg.math.Vector2
+
 class Spritesheet:
-    #utility class for loading and parsing spritesheets
+    """
+    Utility class for loading and parsing spritesheets
+
+    Attributes:
+        spritesheet: the spritesheet we will be using in our game
+    """
     def __init__(self, filename):
         self.spritesheet = pg.image.load(filename).convert()
 
     def get_image(self, x, y, width, height, scale=1):
-        # grab an image out of a larger spreadsheet
+        """
+        Grab an image out of a larger spreadsheet
+
+        Args:
+            x: int, the x position of the smaller image
+            y: int, the y position of the smaller image
+            width: int, the width of the image
+            height: int, the height of the image
+            scale: an optional argument to scale the image. This should be set
+            to an int and will be the scale factor by which the size of the
+            image will be multiplied
+        """
 
         image = pg.Surface((width, height))
         image.blit(self.spritesheet, (0,0), (x,y,width,height))
@@ -18,8 +35,29 @@ class Spritesheet:
         return image
 
 class Players(pg.sprite.Sprite):
+    """
+    The frog player class used throughout the game.
+
+    Attributes:
+        game: an instance of a Game
+        walking: boolean set to True if the player is walking, set to False
+        otherwise
+        jumping: boolean set to True if the player is jumping, otherwise False
+        current_frame: the current frame of animation
+        last_update: the latest update of the player (used in animation)
+        image: the image of the character (what will be displayed)
+        rect: the interactable dimensions of the player image (rectangle)
+        rect.center: position of the center of the player sprite
+        pos: a vector with the x and y positions of the player sprite
+        vel: a vector with the x and y velocities of the player sprite
+        acc: a vector with the x and y accelerations of the player sprite
+    """
 
     def __init__(self, game):
+        """
+        Initializes the Player class
+        """
+
         # Inherit all attributes of pygame Sprite class.
         pg.sprite.Sprite.__init__(self)
 
@@ -47,6 +85,9 @@ class Players(pg.sprite.Sprite):
         self.acc = vec(0, 0)
 
     def load_images(self):
+        """
+        Loads images from the spritesheet for display
+        """
         #look left, prep left, jump left, look right, prep right, jump right
         self.walk_frames_l = [self.game.spritesheet.get_image(83, 346, 64, 50),
                             self.game.spritesheet.get_image(413, 178, 66, 50)]
@@ -73,6 +114,10 @@ class Players(pg.sprite.Sprite):
 
 
     def jump(self):
+        """
+        Executes necessary actions for jumping movement of player (jump sound,
+        moving, etc.)
+        """
         # Check if player sprite is on a platform.
         self.rect.y += 2
         hits = pg.sprite.spritecollide(self, self.game.platforms, False)
@@ -83,11 +128,17 @@ class Players(pg.sprite.Sprite):
             self.vel.y = -PLAYER_JUMP
 
     def jump_cut(self):
+        """
+        Makes the minimum jump velocity -3 for a more natural movement
+        """
         if self.jumping:
             if self.vel.y < -3:
                 self.vel.y = -3
 
     def update(self):
+        """
+        Updates the player in the game loop
+        """
         self.animate()
 
         # Include gravity in the game.
@@ -133,16 +184,15 @@ class Players(pg.sprite.Sprite):
         else:
             self.walking = False
 
-        # Walking animation
+        # Jumping animation
         if self.jumping:
-            # self.last_update = now
-            # self.current_frame = (self.current_frame + 1) % len(self.jump_l)
             bottom = self.rect.bottom
             if self.vel.x<0:
                 self.image = self.jump_l
             else:
                 self.image = self.jump_r
 
+        #Walking animation
         elif self.walking:
                 if now - self.last_update > 100:
                     self.last_update = now
@@ -152,6 +202,8 @@ class Players(pg.sprite.Sprite):
                         self.image = self.walk_frames_l[self.current_frame]
                     else:
                         self.image = self.walk_frames_r[self.current_frame]
+
+        #Make sure jumping and walking sprites are in the right direction
         else:
             if self.vel.x<0:
                 self.image = self.walk_frames_l[self.current_frame]
@@ -164,9 +216,28 @@ class Players(pg.sprite.Sprite):
 
 
 class Platform(pg.sprite.Sprite):
-    """docstring for Platform."""
+    """
+    Platform model class that inherits from the pygame Sprite class.
+
+
+    Attributes:
+    game: an instance of a Game
+    images: a list of images that can be displayed for the platforms (in this
+    case, lillypads)
+    image: a random choice of either the larger or smaller lillypad which will
+    be displayed
+    rect: the interactable area of the lillypad platforms
+    """
 
     def __init__(self, game, x, y):
+        """
+        Sets initial conditions for Platform class
+
+        Args:
+            game: an instance of a game
+            x: the x positon of the platform
+            y: the y position of the platform
+        """
         self.game = game
         # Inherit all attributes of pygame Sprite class.
         pg.sprite.Sprite.__init__(self)
