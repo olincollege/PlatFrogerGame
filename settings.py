@@ -14,11 +14,11 @@ PLAYER_GRAVITY = 1
 PLAYER_JUMP = 20
 
 # Define platforms.
-PLATFORM_LIST = [(0, HEIGHT - 40),
-                 (WIDTH / 2 - 50, HEIGHT * 3/4),
+PLATFORM_LIST = [(0, HEIGHT - 60),
+                 (WIDTH / 2 - 50, HEIGHT * 3/4 - 50),
                  (125, HEIGHT - 350),
                  (350, 200),
-                 (175, 100)]
+                 (100, 100)]
 
 # Define colors.
 WHITE = (255, 255, 255)

@@ -57,7 +57,7 @@ class Game:
         #starting score
         self.score = 0
         # Create sprite groups.
-        self.all_sprites = pg.sprite.Group()
+        self.all_sprites = pg.sprite.LayeredUpdates()
         self.platforms = pg.sprite.Group()
 
         # Define player sprite.
@@ -156,9 +156,9 @@ class Game:
 
         #spawn new platforms to keep same avg number
         while len(self.platforms) < 6:
-            width = random.randrange(50,100)
+            width = random.randrange(100,200)
             p = Platform(self, random.randrange(0, WIDTH-width),
-                        random.randrange(-75, -30))
+                        random.randrange(-60, -30))
             self.platforms.add(p)
             self.all_sprites.add(p)
 
