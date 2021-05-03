@@ -181,9 +181,34 @@ class Game:
 
         #spawn new platforms to keep same avg number
         while len(self.platforms) < 6:
-            width = random.randrange(100,200)
+
+            width = random.randrange(0,400)
             p = Platform(self, random.randrange(0, WIDTH-width),
                         random.randrange(-60, -30))
+            # print("while loop")
+            # #check for collisions
+            # #try 10 attempts and if its not possible, dont try again until screen scrolls
+            #
+            # for plat in self.platforms:
+            #     print("for loop")
+            #     if p.rect.midright[0] > plat.rect.midleft[0] - 5:
+            #         print("a")
+            #         platform_is_valid = False
+            #         break
+            #     elif p.rect.midtop[1] > plat.rect.midbottom[1] - 5:
+            #         print("b")
+            #         platform_is_valid = False
+            #         break
+            #     # elif p.rect.midleft[0] > plat.rect.midright[0]:
+            #     #     print("c")
+            #     #     platform_is_valid = False
+            #     #     break
+            #     # elif p.rect.midbottom[1] < plat.rect.midtop[1]:
+            #     #     print("d")
+            #     #     platform_is_valid = False
+            #     #     break
+            #     else:
+            #         platform_is_valid = True
             self.platforms.add(p)
             self.all_sprites.add(p)
 
