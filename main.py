@@ -1,6 +1,7 @@
 import pygame as pg
 
 from game_model import *
+from game_view import *
 
 g_model = GameModel()
 g_view = GameView(g_model)
