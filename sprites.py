@@ -53,7 +53,7 @@ class Players(pg.sprite.Sprite):
         acc: a vector with the x and y accelerations of the player sprite
     """
 
-    def __init__(self, game):
+    def __init__(self, game_model, game_view):
         """
         Initializes the Player class
         """
@@ -62,7 +62,8 @@ class Players(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
 
         # Pass an instance of the game to the player sprite.
-        self.game = game
+        self.game_model = game_model
+        self.game_view = game_view
 
         #animation attributes
         self.walking = False
@@ -71,7 +72,7 @@ class Players(pg.sprite.Sprite):
         self.last_update = 0
 
         # Create a player sprite.
-        self.image = self.game.spritesheet.get_image(83, 346, 64, 50)
+        self.image = self.game_view.spritesheet.get_image(83, 346, 64, 50)
         self.image.set_colorkey(BLACK)
         self.load_images()
 
@@ -89,12 +90,12 @@ class Players(pg.sprite.Sprite):
         Loads images from the spritesheet for display
         """
         #look left, prep left, jump left, look right, prep right, jump right
-        self.walk_frames_l = [self.game.spritesheet.get_image(83, 346, 64, 50),
-                            self.game.spritesheet.get_image(413, 178, 66, 50)]
+        self.walk_frames_l = [self.game_view.spritesheet.get_image(83, 346, 64, 50),
+                            self.game_view.spritesheet.get_image(413, 178, 66, 50)]
 
-        self.walk_frames_r = [self.game.spritesheet.get_image(413, 230, 66, 50),
-                            self.game.spritesheet.get_image(149, 346, 64, 50)]
-        self.jump_r = self.game.spritesheet.get_image(403, 282, 80, 90, scale=1.2)
+        self.walk_frames_r = [self.game_view.spritesheet.get_image(413, 230, 66, 50),
+                            self.game_view.spritesheet.get_image(149, 346, 64, 50)]
+        self.jump_r = self.game_view.spritesheet.get_image(403, 282, 80, 90, scale=1.2)
         self.jump_r = pg.transform.flip(self.jump_r, False, False)
         self.jump_r = pg.transform.rotate(self.jump_r, 90)
 
@@ -120,10 +121,10 @@ class Players(pg.sprite.Sprite):
         """
         # Check if player sprite is on a platform.
         self.rect.y += 2
-        hits = pg.sprite.spritecollide(self, self.game.platforms, False)
+        hits = pg.sprite.spritecollide(self, self.game_model.platforms, False)
         self.rect.y -= 2
         if hits and not self.jumping:
-            self.game.jump_sound.play()
+            self.game_view.jump_sound.play()
             self.jumping = True
             self.vel.y = -PLAYER_JUMP
 
@@ -229,22 +230,22 @@ class Platform(pg.sprite.Sprite):
     rect: the interactable area of the lillypad platforms
     """
 
-    def __init__(self, game, x, y):
+    def __init__(self, game_view, x, y):
         """
         Sets initial conditions for Platform class
 
         Args:
-            game: an instance of a game
+            game_view: an instance of a GameView
             x: the x positon of the platform
             y: the y position of the platform
         """
-        self.game = game
+        self.game_view = game_view
         # Inherit all attributes of pygame Sprite class.
         pg.sprite.Sprite.__init__(self)
 
         # Create platform sprite.
-        self.images = [self.game.spritesheet.get_image(215, 346, 136, 40),
-                        self.game.spritesheet.get_image(83, 276, 318, 68, scale=0.8)]
+        self.images = [self.game_view.spritesheet.get_image(215, 346, 136, 40),
+                        self.game_view.spritesheet.get_image(83, 276, 318, 68, scale=0.8)]
 
         self.image = choice(self.images)
         self.image.set_colorkey(BLACK)

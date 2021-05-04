@@ -8,7 +8,7 @@ from os import path
 # forest by https://opengameart.org/users/syncopika
 
 
-class Game:
+class GameModel:
     """
     Class in charge of running the game
 
@@ -21,15 +21,14 @@ class Game:
 
     def __init__(self):
         """
-        Sets initial conditions for the Game class
+        Sets initial conditions for the GameModel class
         """
+
         # Initialize game window.
         pg.init()
 
-        # Initialize sounds.
+        # Initialize sounds & screen
         pg.mixer.init()
-
-        # Define game display.
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
 
@@ -38,38 +37,16 @@ class Game:
 
         # Start running the program loop (NOT the game loop).
         self.running = True
-        self.font_name = pg.font.match_font(FONT_NAME)
-        self.load_data()
 
-    def load_data(self):
-        """
-        Helper function for loading data rom outside file (highscore,
-        spritesheet, etc.)
-        """
-
-        #load high score
-        self.dir = path.dirname(__file__)
-        img_dir = path.join(self.dir, "img")
-
-        with open(path.join(self.dir, HS_FILE), 'w') as f:
-            try:
-                self.highscore = int(f.read())
-
-            #if the file is empty, try will give an error
-            except:
-                self.highscore = 0
-
-        #load spritesheet
-        self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
-
-        # Load sounds.
-        self.snd_dir = path.join(self.dir, 'snd')
-        self.jump_sound = pg.mixer.Sound(path.join(self.snd_dir, 'PacificTreeFrog.wav'))
-
-    def new(self):
+    def new(self, view):
         """
         Starts a new game.
+
+        Args:
+            view: an instance of a GameView
         """
+        self.view = view
+
         #starting score
         self.score = 0
         # Create sprite groups.
@@ -77,18 +54,18 @@ class Game:
         self.platforms = pg.sprite.Group()
 
         # Define player sprite.
-        self.player = Players(self)
+        self.player = Players(self, self.view)
         self.all_sprites.add(self.player)
 
         # Define platform sprites from list.
         for plat in PLATFORM_LIST:
-            p = Platform(self, *plat)
+            p = Platform(self.view, *plat)
             self.all_sprites.add(p)
             self.platforms.add(p)
 
         # load music. We could do different music themes, maybe creepy forest
         # after a certain score with background change.
-        pg.mixer.music.load(path.join(self.snd_dir, 'forest.ogg'))
+        pg.mixer.music.load(path.join(self.view.snd_dir, 'forest.ogg'))
         self.run()
 
     def run(self):
@@ -112,7 +89,7 @@ class Game:
             self.update()
 
             # Draw (render) the changes.
-            self.draw()
+            self.view.draw()
 
         pg.mixer.music.fadeout(500)
 
@@ -183,7 +160,7 @@ class Game:
         while len(self.platforms) < 6:
 
             width = random.randrange(0,400)
-            p = Platform(self, random.randrange(0, WIDTH-width),
+            p = Platform(self.view, random.randrange(0, WIDTH-width),
                         random.randrange(-60, -30))
             # print("while loop")
             # #check for collisions
@@ -221,6 +198,61 @@ class Game:
         if len(self.platforms) == 0:
             self.playing = False
 
+
+
+
+    def wait_for_key(self):
+        """
+        Waits for key to be pressed before starting game (start screen)
+        """
+        waiting = True
+        while waiting:
+            self.clock.tick(FPS)
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    waiting = False
+                    self.running = False
+                if event.type == pg.KEYUP:
+                    waiting = False
+
+
+
+class GameView:
+    def __init__(self, game_model):
+        self.game_model = game_model
+
+        # Define game display.
+        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
+        pg.display.set_caption(TITLE)
+        #load spritesheet
+
+
+        self.font_name = pg.font.match_font(FONT_NAME)
+        self.load_data()
+
+    def load_data(self):
+        """
+        Helper function for loading data rom outside file (highscore,
+        spritesheet, etc.)
+        """
+
+        #load high score
+        self.dir = path.dirname(__file__)
+        img_dir = path.join(self.dir, "img")
+
+        self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
+        with open(path.join(self.dir, HS_FILE), 'w') as f:
+            try:
+                self.highscore = int(f.read())
+
+            #if the file is empty, try will give an error
+            except:
+                self.highscore = 0
+
+        # Load sounds.
+        self.snd_dir = path.join(self.dir, 'snd')
+        self.jump_sound = pg.mixer.Sound(path.join(self.snd_dir, 'PacificTreeFrog.wav'))
+
     def draw(self):
         """
         Displays and draws the game loop. This is a view element.
@@ -230,11 +262,11 @@ class Game:
         self.screen.fill(BGCOLOUR)
 
         # Draw all the sprites.
-        self.all_sprites.draw(self.screen)
-        self.screen.blit(self.player.image, self.player.rect)
+        self.game_model.all_sprites.draw(self.screen)
+        self.screen.blit(self.game_model.player.image, self.game_model.player.rect)
 
         # Show score
-        self.draw_text(str(self.score), 22, WHITE, WIDTH/2, 15)
+        self.draw_text(str(self.game_model.score), 22, WHITE, WIDTH/2, 15)
 
         # 'Flip' display to show updated view.
         pg.display.flip()
@@ -262,23 +294,8 @@ class Game:
         self.draw_text("Press any key to play", 22, GREEN, WIDTH/2, HEIGHT*3/4)
         self.draw_text(f"High Score: {self.highscore}", 22, GREEN, WIDTH/2, 15)
         pg.display.flip()
-        self.wait_for_key()
+        self.game_model.wait_for_key()
         pg.mixer.music.fadeout(500)
-
-
-    def wait_for_key(self):
-        """
-        Waits for key to be pressed before starting game (start screen)
-        """
-        waiting = True
-        while waiting:
-            self.clock.tick(FPS)
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    waiting = False
-                    self.running = False
-                if event.type == pg.KEYUP:
-                    waiting = False
 
     def show_go_screen(self):
         """
@@ -289,7 +306,7 @@ class Game:
         pg.mixer.music.play(loops=-1)
 
         #Check that game is running before displaying screen
-        if not self.running:
+        if not self.game_model.running:
             return
 
         #GO title display
@@ -301,7 +318,7 @@ class Game:
         self.screen.blit(self.image, self.title_rect)
 
         # Drawing text
-        self.draw_text(f"Score: {self.score}", 22, GREEN,
+        self.draw_text(f"Score: {self.game_model.score}", 22, GREEN,
                         WIDTH/2, HEIGHT/2)
         self.draw_text("Press any key to play again", 22, GREEN, WIDTH/2,
                         HEIGHT*3/4)
@@ -309,19 +326,19 @@ class Game:
         #Check for high score
         # If there's a high score, display NEW HIGH SCORE, otherwise
         #return the score and the high score
-        if self.score > self.highscore:
-            self.highscore = self.score
+        if self.game_model.score > self.highscore:
+            self.highscore = self.game_model.score
             self.draw_text("NEW HIGH SCORE!", 22, GREEN, WIDTH/2, HEIGHT/2 + 40)
 
             #save high score in file
             with open(path.join(self.dir, HS_FILE), 'w') as f:
-                f.write(str(self.score))
+                f.write(str(self.game_model.score))
         else:
             self.draw_text(f"High Score: {self.highscore}", 22, GREEN,
                             WIDTH/2, HEIGHT/2 +40)
 
         pg.display.flip()
-        self.wait_for_key()
+        self.game_model.wait_for_key()
         pg.mixer.music.fadeout(500)
 
     def draw_text(self, text, font_size, colour, x, y):

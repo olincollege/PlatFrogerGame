@@ -2,12 +2,14 @@ import pygame as pg
 
 from game_model import *
 
-g = Game()
-g.show_start_screen()
+g_model = GameModel()
+g_view = GameView(g_model)
 
-while g.running:
-    g.new()
-    g.show_go_screen()
+g_view.show_start_screen()
+
+while g_model.running:
+    g_model.new(g_view)
+    g_view.show_go_screen()
 
 
 pg.quit()
