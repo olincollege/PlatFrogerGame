@@ -20,7 +20,7 @@ class GameModel:
         font_name: the font used for text
     """
 
-    def __init__(self):
+    def __init__(self, controller):
         """
         Sets initial conditions for the GameModel class
         """
@@ -38,6 +38,9 @@ class GameModel:
 
         # Start running the program loop (NOT the game loop).
         self.running = True
+
+        # Define the controller.
+        self.controller  = controller
 
     def new(self, view):
         """
@@ -84,7 +87,7 @@ class GameModel:
             self.clock.tick(FPS)
 
             # Input and process user's key presses.
-            self.events()
+            self.controller.events()
 
             # Update the game state to reflect the key presses.
             self.update()
@@ -94,33 +97,7 @@ class GameModel:
 
         pg.mixer.music.fadeout(500)
 
-    def events(self):
-        """
-        Checks events in the game loop and changes attributes based on that
-        (i.e. if the event is QUIT, it quits the game by setting playing = False)
-        This is a controller element.
-        """
-        # Events in game loop.
-        #CONTROLLER
 
-        # Check each event in list of past, non-executed events.
-        for event in pg.event.get():
-
-            # Check for end of program.
-            if event.type == pg.QUIT:
-                if self.playing:
-                    self.playing = False
-                self.running = False
-
-            # Check for space key for jumping.
-            if event.type == pg.KEYDOWN:
-               if event.key == pg.K_SPACE:
-
-                   self.player.jump()
-
-            if event.type == pg.KEYUP:
-               if event.key == pg.K_SPACE:
-                   self.player.jump_cut()
 
     def update(self):
         """
@@ -215,3 +192,8 @@ class GameModel:
                     self.running = False
                 if event.type == pg.KEYUP:
                     waiting = False
+
+    def quit_game(self):
+        if self.playing:
+            self.playing = False
+        self.running = False

@@ -1,8 +1,9 @@
 import pygame as pg
 
-from game_model import *
-from game_view import *
-
+from game_model import GameModel
+from game_view import GameView
+from controller import PlayerController
+g_controller = PlayerController
 g_model = GameModel()
 g_view = GameView(g_model)
 
