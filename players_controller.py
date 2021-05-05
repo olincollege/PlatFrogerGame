@@ -106,7 +106,7 @@ class Players(pg.sprite.Sprite):
             if self.vel.y < -3:
                 self.vel.y = -3
 
-    def update(self):
+    def update(self, direction):
         """
         Updates the player in the game loop
         """
@@ -115,12 +115,9 @@ class Players(pg.sprite.Sprite):
         # Include gravity in the game.
         self.acc = vec(0, PLAYER_GRAVITY)
 
-        # Move player left and right.
-        keys = pg.key.get_pressed()
-        if keys[pg.K_LEFT]:
+        if direction == "Left":
             self.acc.x = -PLAYER_ACC
-
-        if keys[pg.K_RIGHT]:
+        if direction == "Right":
             self.acc.x = PLAYER_ACC
 
         # Instill friction into movement.
