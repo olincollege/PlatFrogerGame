@@ -146,3 +146,30 @@ class GameView:
         text_rect = text_surface.get_rect()
         text_rect.midtop = (x,y)
         self.screen.blit(text_surface, text_rect)
+
+    def load_images(self):
+        """
+        Loads images from the spritesheet for display
+        """
+        #look left, prep left, jump left, look right, prep right, jump right
+        self.walk_frames_l = [self.spritesheet.get_image(83, 346, 64, 50),
+                            self.spritesheet.get_image(413, 178, 66, 50)]
+        self.walk_frames_r = [self.spritesheet.get_image(413, 230, 66, 50),
+                              self.spritesheet.get_image(149, 346, 64, 50)]
+        self.jump_r = self.spritesheet.get_image(403, 282, 80, 90, scale=1.2)
+        self.jump_r = pg.transform.flip(self.jump_r, False, False)
+        self.jump_r = pg.transform.rotate(self.jump_r, 90)
+
+        self.jump_l = pg.transform.flip(self.jump_r, True, False)
+
+
+        self.jump_l.set_colorkey(BLACK)
+        self.jump_r.set_colorkey(BLACK)
+
+        for frame in self.walk_frames_l:
+            frame.set_colorkey(BLACK)
+            
+        for frame in self.walk_frames_r:
+            frame.set_colorkey(BLACK)
+                      # self.game.spritesheet.get_image(1, 282, 80, 90),
+                      # self.game.spritesheet.get_image(149, 346, 64, 50),

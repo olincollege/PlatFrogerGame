@@ -1,4 +1,3 @@
-from settings import *
 import pygame as pg
 
 # Import vectors from pygame math module.

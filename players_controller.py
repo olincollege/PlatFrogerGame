@@ -1,10 +1,10 @@
 from settings import *
 import pygame as pg
-
+from game_view import GameView
 # Import vectors from pygame math module.
 vec = pg.math.Vector2
 
-class Players(pg.sprite.Sprite):
+class Player(pg.sprite.Sprite):
     """
     The frog player class used throughout the game.
 
@@ -23,7 +23,7 @@ class Players(pg.sprite.Sprite):
         acc: a vector with the x and y accelerations of the player sprite
     """
 
-    def __init__(self, game_model, game_view):
+    def __init__(self, game_model):
         """
         Initializes the Player class
         """
@@ -33,8 +33,7 @@ class Players(pg.sprite.Sprite):
 
         # Pass an instance of the game to the player sprite.
         self.game_model = game_model
-        self.game_view = game_view
-
+        self.game_view =  GameView(game_model)
         #animation attributes
         self.walking = False
         self.jumping = False
@@ -44,7 +43,7 @@ class Players(pg.sprite.Sprite):
         # Create a player sprite.
         self.image = self.game_view.spritesheet.get_image(83, 346, 64, 50)
         self.image.set_colorkey(BLACK)
-        self.load_images()
+        self.game_view.load_images()
 
         #self.image.fill(YELLOW)
         self.rect = self.image.get_rect()
@@ -55,33 +54,7 @@ class Players(pg.sprite.Sprite):
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
 
-    def load_images(self):
-        """
-        Loads images from the spritesheet for display
-        """
-        #look left, prep left, jump left, look right, prep right, jump right
-        self.walk_frames_l = [self.game_view.spritesheet.get_image(83, 346, 64, 50),
-                            self.game_view.spritesheet.get_image(413, 178, 66, 50)]
 
-        self.walk_frames_r = [self.game_view.spritesheet.get_image(413, 230, 66, 50),
-                            self.game_view.spritesheet.get_image(149, 346, 64, 50)]
-        self.jump_r = self.game_view.spritesheet.get_image(403, 282, 80, 90, scale=1.2)
-        self.jump_r = pg.transform.flip(self.jump_r, False, False)
-        self.jump_r = pg.transform.rotate(self.jump_r, 90)
-
-        self.jump_l = pg.transform.flip(self.jump_r, True, False)
-
-
-        self.jump_l.set_colorkey(BLACK)
-        self.jump_r.set_colorkey(BLACK)
-
-        for frame in self.walk_frames_l:
-            frame.set_colorkey(BLACK)
-
-        for frame in self.walk_frames_r:
-            frame.set_colorkey(BLACK)
-                    # self.game.spritesheet.get_image(1, 282, 80, 90),
-                    # self.game.spritesheet.get_image(149, 346, 64, 50),
 
 
     def jump(self):
@@ -106,7 +79,13 @@ class Players(pg.sprite.Sprite):
             if self.vel.y < -3:
                 self.vel.y = -3
 
-    def update(self, direction):
+    def move(self, direction):
+        if direction == "Left":
+            self.acc.x = -PLAYER_ACC
+        if direction == "Right":
+            self.acc.x = PLAYER_ACC
+
+    def update(self):
         """
         Updates the player in the game loop
         """
@@ -114,11 +93,6 @@ class Players(pg.sprite.Sprite):
 
         # Include gravity in the game.
         self.acc = vec(0, PLAYER_GRAVITY)
-
-        if direction == "Left":
-            self.acc.x = -PLAYER_ACC
-        if direction == "Right":
-            self.acc.x = PLAYER_ACC
 
         # Instill friction into movement.
         self.acc.x += self.vel.x * PLAYER_FRICTION
@@ -156,28 +130,28 @@ class Players(pg.sprite.Sprite):
         if self.jumping:
             bottom = self.rect.bottom
             if self.vel.x<0:
-                self.image = self.jump_l
+                self.image = self.game_view.jump_l
             else:
-                self.image = self.jump_r
+                self.image = self.game_view.jump_r
 
         #Walking animation
         elif self.walking:
                 if now - self.last_update > 100:
                     self.last_update = now
-                    self.current_frame = (self.current_frame + 1) % len(self.walk_frames_l)
+                    self.current_frame = (self.current_frame + 1) % len(self.game_view.walk_frames_l)
                     bottom = self.rect.bottom
                     if self.vel.x<0:
-                        self.image = self.walk_frames_l[self.current_frame]
+                        self.image = self.game_view.walk_frames_l[self.current_frame]
                     else:
-                        self.image = self.walk_frames_r[self.current_frame]
+                        self.image = self.game_view.walk_frames_r[self.current_frame]
 
         #Make sure jumping and walking sprites are in the right direction
         else:
             if self.vel.x<0:
-                self.image = self.walk_frames_l[self.current_frame]
+                self.image = self.game_view.walk_frames_l[self.current_frame]
             elif self.vel.x>0:
-                self.image = self.walk_frames_r[self.current_frame]
-            elif self.image == self.jump_l:
-                self.image = self.walk_frames_l[self.current_frame]
-            elif self.image == self.jump_r:
-                self.image = self.walk_frames_r[self.current_frame]
+                self.image = self.game_view.walk_frames_r[self.current_frame]
+            elif self.image == self.game_view.jump_l:
+                self.image = self.game_view.walk_frames_l[self.current_frame]
+            elif self.image == self.game_view.jump_r:
+                self.image = self.game_view.walk_frames_r[self.current_frame]

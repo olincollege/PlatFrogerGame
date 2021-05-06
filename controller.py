@@ -1,24 +1,22 @@
 import pygame as pg
-import players_controller
 class PlayerController:
     """docstring for PlayerController."""
 
-    def __init__(self, player, game):
-        self.player = player
+    def __init__(self, game):
         self.game = game
 
 
     def movement(self):
         # Move player left and right.
         keys = pg.key.get_pressed()
-        if keys[pg.K_LEFT and pg.K_RIGHT]:
-            self.player.update("Stop")
+        # if keys[pg.K_LEFT and pg.K_RIGHT]:
+        #     self.game.player.update("Stop")
 
-        elif keys[pg.K_LEFT]:
-            self.player.update("Left")
+        if keys[pg.K_LEFT]:
+            self.game.player.move("Left")
 
         elif keys[pg.K_RIGHT]:
-            self.player.update("Right")
+            self.game.player.move("Right")
 
 
     def events(self):
@@ -40,9 +38,9 @@ class PlayerController:
 
             # Check for space key for jumping.
             if event.type == pg.KEYDOWN:
-               if event.key == pg.K_SPACE:
-                   self.player.jump()
+                if event.key == pg.K_SPACE:
+                    self.game.player.jump()
 
             if event.type == pg.KEYUP:
-               if event.key == pg.K_SPACE:
-                   self.player.jump_cut()
+                if event.key == pg.K_SPACE:
+                    self.game.player.jump_cut()
