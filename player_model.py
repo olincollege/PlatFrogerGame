@@ -80,6 +80,8 @@ class Player(pg.sprite.Sprite):
                 self.vel.y = -3
 
     def move(self, direction):
+        if direction == "Stop":
+            self.acc.x = 0
         if direction == "Left":
             self.acc.x = -PLAYER_ACC
         if direction == "Right":
@@ -87,11 +89,16 @@ class Player(pg.sprite.Sprite):
 
     def move_test(self):
         keys = pg.key.get_pressed()
+
+
         if keys[pg.K_LEFT]:
             self.move("Left")
 
         if keys[pg.K_RIGHT]:
             self.move("Right")
+
+        if keys[pg.K_LEFT] and keys[pg.K_RIGHT]:
+            self.move("Stop")
 
     def update(self):
         """
