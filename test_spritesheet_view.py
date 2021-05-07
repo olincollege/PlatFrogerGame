@@ -34,7 +34,7 @@ spritesheet_cases = [
     ((83, 276, 318, 68, 0.8), (254, 54)),
 ]
 
-# Test if player is initialized correctly.
+# Test if correct image is retrieved.
 @pytest.mark.parametrize("specifications,dimensions", spritesheet_cases)
 def test_player_initialization(specifications, dimensions):
     """
