@@ -105,15 +105,7 @@ class GameModel:
                     plat.kill()
                     self.score += 10
 
-        #spawn new platforms to keep same avg number
-        while len(self.platforms) < 6:
-
-            width = random.randrange(0,400)
-            p = Platform(self.view, random.randrange(0, WIDTH-width),
-                        random.randrange(-60, -30))
-
-            self.platforms.add(p)
-            self.all_sprites.add(p)
+        self.spawn_platforms()
 
         # If we die
         if self.player.rect.bottom > HEIGHT:
@@ -124,8 +116,39 @@ class GameModel:
         if len(self.platforms) == 0:
             self.playing = False
 
+    def spawn_platforms(self):
+        """
+        Spawns new platforms to keep the same average number on screen.
 
+        This function takes no outside arguments and returns nothing.
+        """
+    #spawn new platforms to keep same avg number
+        while len(self.platforms) < 7:
 
+            width = random.randrange(0,400)
+            p = Platform(self.view, random.randrange(0, WIDTH-width),
+                        random.randrange(-60, -30))
+
+            # for plat in self.platforms:
+            #     #kill overlapping platforms
+            #     overlaps = pg.sprite.spritecollide(plat, self.platforms, False)
+            #     if len(overlaps) > 1:
+            #         plat.kill()
+
+                # if spawn_y > PLAYER_JUMP - 5:
+                #     spawn_y = 0
+                #     self.spawn_platforms()
+                #
+                # elif spawn_y > 60:
+                #     if random.randint(1, 20) == 1:
+                #         spawn_y = 0
+                #         self.spawn_platforms()
+                #
+                # # In camera area
+                # spawn_y += abs(self.player.vel.y)
+
+            self.platforms.add(p)
+            self.all_sprites.add(p)
 
     def wait_for_key(self):
         """
