@@ -1,3 +1,6 @@
+"""
+Test all the class methods in the Player class in the player_model file.
+"""
 import pytest
 import pygame as pg
 from game_model import GameModel
@@ -5,7 +8,7 @@ from game_view import GameView
 from controller import PlayerController
 from player_model import Player
 from platform_model import Platform
-from settings import *
+from settings import WIDTH, HEIGHT, PLAYER_ACC
 test_model = GameModel()
 test_controller = PlayerController(test_model)
 test_view = GameView(test_model)
@@ -156,8 +159,8 @@ def test_jump(platform_coordinates, player_coordinates,jumping):
 
     # Define a platform sprite at the specified coordinates.
     test_player.game_model.platforms = pg.sprite.Group()
-    p = Platform(test_view, *platform_coordinates)
-    test_player.game_model.platforms.add(p)
+    platform = Platform(test_view, *platform_coordinates)
+    test_player.game_model.platforms.add(platform)
 
     # Place the player at the specified coordinates.
     test_player.rect.bottomleft = player_coordinates
