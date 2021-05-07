@@ -168,7 +168,7 @@ class GameView:
 
         for frame in self.walk_frames_l:
             frame.set_colorkey(BLACK)
-            
+
         for frame in self.walk_frames_r:
             frame.set_colorkey(BLACK)
                       # self.game.spritesheet.get_image(1, 282, 80, 90),

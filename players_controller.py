@@ -85,6 +85,14 @@ class Player(pg.sprite.Sprite):
         if direction == "Right":
             self.acc.x = PLAYER_ACC
 
+    def move_test(self):
+        keys = pg.key.get_pressed()
+        if keys[pg.K_LEFT]:
+            self.move("Left")
+
+        if keys[pg.K_RIGHT]:
+            self.move("Right")
+
     def update(self):
         """
         Updates the player in the game loop
@@ -93,6 +101,14 @@ class Player(pg.sprite.Sprite):
 
         # Include gravity in the game.
         self.acc = vec(0, PLAYER_GRAVITY)
+
+        # keys = pg.key.get_pressed()
+        # if keys[pg.K_LEFT]:
+        #     self.acc.x = -PLAYER_ACC
+        #
+        # if keys[pg.K_RIGHT]:
+        #     self.acc.x = PLAYER_ACC
+        self.move_test()
 
         # Instill friction into movement.
         self.acc.x += self.vel.x * PLAYER_FRICTION
@@ -133,25 +149,20 @@ class Player(pg.sprite.Sprite):
                 self.image = self.game_view.jump_l
             else:
                 self.image = self.game_view.jump_r
-
         #Walking animation
         elif self.walking:
-                if now - self.last_update > 100:
-                    self.last_update = now
-                    self.current_frame = (self.current_frame + 1) % len(self.game_view.walk_frames_l)
-                    bottom = self.rect.bottom
-                    if self.vel.x<0:
-                        self.image = self.game_view.walk_frames_l[self.current_frame]
-                    else:
-                        self.image = self.game_view.walk_frames_r[self.current_frame]
+            if now - self.last_update > 100:
+                self.last_update = now
+                self.current_frame = (self.current_frame + 1) % len(self.game_view.walk_frames_l)
+                bottom = self.rect.bottom
+                if self.vel.x<0:
+                    self.image = self.game_view.walk_frames_l[self.current_frame]
+                else:
+                    self.image = self.game_view.walk_frames_r[self.current_frame]
 
         #Make sure jumping and walking sprites are in the right direction
         else:
-            if self.vel.x<0:
-                self.image = self.game_view.walk_frames_l[self.current_frame]
-            elif self.vel.x>0:
-                self.image = self.game_view.walk_frames_r[self.current_frame]
-            elif self.image == self.game_view.jump_l:
+            if self.image == self.game_view.jump_l:
                 self.image = self.game_view.walk_frames_l[self.current_frame]
             elif self.image == self.game_view.jump_r:
                 self.image = self.game_view.walk_frames_r[self.current_frame]

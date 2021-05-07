@@ -26,7 +26,7 @@ while g_model.running:
         g_controller.events()
 
         # Input and process left and right key presses.
-        g_controller.movement()
+        # g_controller.movement()
 
         # Update the game state to reflect the key presses.
         g_model.update()

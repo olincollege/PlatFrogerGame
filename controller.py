@@ -6,17 +6,8 @@ class PlayerController:
         self.game = game
 
 
-    def movement(self):
-        # Move player left and right.
-        keys = pg.key.get_pressed()
-        # if keys[pg.K_LEFT and pg.K_RIGHT]:
-        #     self.game.player.update("Stop")
+    # def movement(self):
 
-        if keys[pg.K_LEFT]:
-            self.game.player.move("Left")
-
-        elif keys[pg.K_RIGHT]:
-            self.game.player.move("Right")
 
 
     def events(self):
@@ -27,6 +18,17 @@ class PlayerController:
         """
         # Events in game loop.
         #CONTROLLER
+        # Move player left and right.
+        # keys = pg.key.get_pressed()
+        # if keys[pg.K_LEFT and pg.K_RIGHT]:
+        #     self.game.player.update("Stop")
+        #
+        # if keys[pg.K_LEFT]:
+        #     self.game.player.move("Left")
+        #
+        # elif keys[pg.K_RIGHT]:
+        #     self.game.player.move("Right")
+
 
         # Check each event in list of past, non-executed events.
         for event in pg.event.get():
