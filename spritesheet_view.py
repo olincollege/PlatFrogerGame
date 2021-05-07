@@ -1,7 +1,8 @@
+"""
+Load spritesheet for the game and enable extraction of the desired sprites.
+"""
 import pygame as pg
 
-# Import vectors from pygame math module.
-vec = pg.math.Vector2
 
 class Spritesheet:
     """
@@ -13,13 +14,13 @@ class Spritesheet:
     def __init__(self, filename):
         self.spritesheet = pg.image.load(filename).convert()
 
-    def get_image(self, x, y, width, height, scale=1):
+    def get_image(self, x_coord, y_coord, width, height, scale=1):
         """
         Grab an image out of a larger spreadsheet
 
         Args:
-            x: int, the x position of the smaller image
-            y: int, the y position of the smaller image
+            x_coord: int, the x position of the smaller image
+            y_coord: int, the y position of the smaller image
             width: int, the width of the image
             height: int, the height of the image
             scale: an optional argument to scale the image. This should be set
@@ -28,6 +29,6 @@ class Spritesheet:
         """
 
         image = pg.Surface((width, height))
-        image.blit(self.spritesheet, (0,0), (x,y,width,height))
+        image.blit(self.spritesheet, (0,0), (x_coord,y_coord,width,height))
         image = pg.transform.scale(image, (round(width * scale), round(height * scale)))
         return image

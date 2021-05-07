@@ -2,7 +2,7 @@ import pygame as pg
 import random
 from settings import *
 from spritesheet_view import Spritesheet
-from players_controller import Player
+from player_model import Player
 from platform_model import Platform
 from game_view import GameView
 from os import path
