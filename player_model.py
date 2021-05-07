@@ -190,7 +190,6 @@ class Player(pg.sprite.Sprite):
 
         # Jumping animation.
         if self.jumping:
-            # bottom = self.rect.bottom
 
             # Choose left or right jumping frame depending on the player's
             # horizontal velocity.
@@ -207,7 +206,6 @@ class Player(pg.sprite.Sprite):
                 self.last_update = now
                 self.current_frame = (self.current_frame + 1) \
                 % len(self.game_view.walk_frames_l)
-                # bottom = self.rect.bottom
                 # Choose left or right walking frame based on the player's
                 # horizontal velocity.
                 if self.vel.x < 0:
