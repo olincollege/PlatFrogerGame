@@ -14,7 +14,18 @@ By Charlotte Ramiro de Huelbes and Vedaant Kuchhal
   <a href="https://youtu.be/PBVG8PiHKEw">
            <img align="center" alt="Platfrogs demo" src="https://i.imgur.com/vniLbfe.jpg"
            width="350" height="300" class="center">
+  </a>
     </p>
+
+## Installation
+
+You can install the game by downloading the zip file off of the [Platfrogs GitHub](https://github.com/olincollege/PlatFrogerGame). It is necessary to [install the PyGame library](https://www.pygame.org/wiki/GettingStarted) in order for the game to run successfully. Once the library is installed, all you need to do is run the main.py file with a python-friendly program such as Atom or Virtual Studio Code.
+
+## Credit Where Credit is Due
+
+We took a lot of inspiration from the KidsCanCode PyGame platformer [tutorials](https://youtu.be/uWvb3QzA48c). Although the architecture of our code ended up being completely different, we used their tutorials in the beginning of our process in order to get an understanding of how to use the PyGame library to make a platformer.
+
+This project was programmed and ideated by Charlotte Ramiro de Huelbes and Vedaant Kuchhal. The graphics for the game were drawn by Charlotte Ramiro de Huelbes, while the music was taken from [OpenGameArt](https://opengameart.org/). The starting screen music was composed by [horrorpen](https://opengameart.org/users/horrorpen) while the in-game music was composed by [syncopika](https://opengameart.org/users/syncopika).
 
 ## Other stuff i'll be deleting
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
