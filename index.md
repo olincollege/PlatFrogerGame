@@ -8,7 +8,13 @@ By Charlotte Ramiro de Huelbes and Vedaant Kuchhal
 
 
 ## Gameplay
-
+ Platfrogs plays like a classic vertical platformer game, where you can use the arrow keys to move side to side and the space bar to jump. This is a high-score chaser wehre the goal is to get as high of a score as possible. A demo of the game can be seen by clicking the image below:
+ 
+ <p align="center">
+  <a href="https://youtu.be/PBVG8PiHKEw">
+           <img align="center" alt="Platfrogs demo" src="https://i.imgur.com/vniLbfe.jpg"
+           width="350" height="300" class="center">
+    </p>
 
 ## Other stuff i'll be deleting
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
