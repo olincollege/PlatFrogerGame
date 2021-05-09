@@ -3,7 +3,6 @@ Test the PlayerController class to respond appropriately to key inputs.
 """
 import pytest
 import pygame as pg
-from pynput.keyboard import Key, Controller
 from game_model import GameModel
 from controller import PlayerController
 
@@ -30,6 +29,8 @@ move_cases = [
     # Check
 ]
 # Test if jumping occurs correctly.
+
+
 @pytest.mark.parametrize("pygame_event, flag_value", jumping_cases)
 def test_jumping_cases(pygame_event, flag_value):
     """
@@ -43,13 +44,15 @@ def test_jumping_cases(pygame_event, flag_value):
         flag_value: An integer indicating which Player method has been called.
     """
     # Simulate key press.
-    pg.event.post(pygame_event) # add the event to the queue
+    pg.event.post(pygame_event)  # add the event to the queue
 
     # Check if correct method is called.
     test_player_controller.events()
     assert test_player_controller.game.player.flag_unit_test == flag_value
 
 # Test if quitting occurs correctly.
+
+
 @pytest.mark.parametrize("pygame_event, is_running", quit_case)
 def test_quit_case(pygame_event, is_running):
     """
@@ -63,7 +66,7 @@ def test_quit_case(pygame_event, is_running):
         is_running: A boolean indicating if the game is running.
     """
     # Simulate click to exit game.
-    pg.event.post(pygame_event) # add the event to the queue
+    pg.event.post(pygame_event)  # add the event to the queue
 
     # Check if game stops running.
     test_player_controller.events()

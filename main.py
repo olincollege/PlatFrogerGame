@@ -1,3 +1,7 @@
+"""
+Puts together all game elements into a main game loop.
+"""
+
 import pygame as pg
 
 from game_model import GameModel
