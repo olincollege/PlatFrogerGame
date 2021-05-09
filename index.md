@@ -25,35 +25,4 @@ You can install the game by downloading the zip file off of the [Platfrogs GitHu
 
 We took a lot of inspiration from the KidsCanCode PyGame platformer [tutorials](https://youtu.be/uWvb3QzA48c). Although the architecture of our code ended up being completely different, we used their tutorials in the beginning of our process in order to get an understanding of how to use the PyGame library to make a platformer.
 
-This project was programmed and ideated by Charlotte Ramiro de Huelbes and Vedaant Kuchhal. The graphics for the game were drawn by Charlotte Ramiro de Huelbes, while the music was taken from [OpenGameArt](https://opengameart.org/). The starting screen music was composed by [horrorpen](https://opengameart.org/users/horrorpen) while the in-game music was composed by [syncopika](https://opengameart.org/users/syncopika).
-
-## Other stuff i'll be deleting
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/olincollege/PlatFrogerGame/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+This project was programmed and ideated by Charlotte Ramiro de Huelbes and Vedaant Kuchhal, both of which are students at Olin College of Engineering. The graphics for the game were drawn by Charlotte Ramiro de Huelbes, while the music was taken from [OpenGameArt](https://opengameart.org/). The starting screen music was composed by [horrorpen](https://opengameart.org/users/horrorpen) while the in-game music was composed by [syncopika](https://opengameart.org/users/syncopika).
