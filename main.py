@@ -12,7 +12,6 @@ g_view.show_start_screen()
 
 while g_model.running:
     g_model.new()
-    pg.mixer.music.play(loops=-1)
     # Start running the game loop.
     g_model.playing = True
 

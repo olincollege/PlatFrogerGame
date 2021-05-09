@@ -43,7 +43,7 @@ initial_player_cases = [
 ]
 
 jump_cases = [
-    # Check if player can jump if irectly on the platform.
+    # Check if player can jump if directly on the platform.
     ((50, 100), (50, 100), True),
     # Check if player can jump if slightly above the platform.
     ((100, 200), (100, 150), False),

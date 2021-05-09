@@ -1,5 +1,5 @@
 """
-Create a player for the PlatFroger game.
+Create a player for the PlatFrogs game.
 """
 import pygame as pg
 from settings import (BLACK,
@@ -11,6 +11,7 @@ from settings import (BLACK,
                       PLAYER_FRICTION,)
 
 from game_view import GameView
+from controller import PlayerController
 # Import vectors from pygame math module.
 vec = pg.math.Vector2
 
@@ -31,6 +32,8 @@ class Player(pg.sprite.Sprite):
         pos: a vector with the x and y positions of the player sprite
         vel: a vector with the x and y velocities of the player sprite
         acc: a vector with the x and y accelerations of the player sprite
+        flag_unit_test: an integer indicating whether a player enters certain
+            methods, used for unit testing.
     """
 
     def __init__(self, game_model):
@@ -59,7 +62,7 @@ class Player(pg.sprite.Sprite):
         # Create a player sprite.
         self.image = self.game_view.spritesheet.get_image(83, 346, 64, 50)
         self.image.set_colorkey(BLACK)
-        self.game_view.load_images()
+        # self.game_view.load_images()
         self.rect = self.image.get_rect()
 
         # Initialize sprite's position, velocity, and acceleration vectors.
@@ -68,12 +71,19 @@ class Player(pg.sprite.Sprite):
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
 
+        # Initialize a flag used for unit testing the controller.
+        self.flag_unit_test = 0
+
+        # Initialize controller instance.
+        self.controller = PlayerController(game_model)
 
     def jump(self):
         """
         Execute necessary actions for jumping movement of player (jump sound,
         moving, etc.)
         """
+        # Change value of flag for unit test.
+        self.flag_unit_test = 1
         # Check if player sprite is on a platform.
         self.rect.y += 2
         hits = pg.sprite.spritecollide(self, self.game_model.platforms, False)
@@ -88,6 +98,9 @@ class Player(pg.sprite.Sprite):
         Allow the player to vary jump height by doing shorter hops if the jump
         key is pressed and released quickly.
         """
+        # Change value of flag for unit test.
+        self.flag_unit_test = 2
+
         if self.jumping:
             if self.vel.y < -3:
                 self.vel.y = -3
@@ -107,32 +120,14 @@ class Player(pg.sprite.Sprite):
             accelerate.
         """
         if direction == "Stop":
+            self.flag_unit_test = 3
             self.acc.x = 0
         if direction == "Left":
+            self.flag_unit_test = 4
             self.acc.x = -PLAYER_ACC
         if direction == "Right":
+            self.flag_unit_test = 5
             self.acc.x = PLAYER_ACC
-
-    def move_test(self):
-        """
-        Control movement of player using arrow keys.
-
-        Pressing the left arrow key results in a message to go left, while
-        pressing the right arrow key results in a message to go right. Pressing
-        both results in the player coming to a halt.
-        """
-        # Obtain all the current key presses.
-        keys = pg.key.get_pressed()
-
-        # Match key presses to corresponding direction messages.
-        if keys[pg.K_LEFT]:
-            self.move("Left")
-
-        if keys[pg.K_RIGHT]:
-            self.move("Right")
-
-        if keys[pg.K_LEFT] and keys[pg.K_RIGHT]:
-            self.move("Stop")
 
     def update(self):
         """
@@ -149,7 +144,7 @@ class Player(pg.sprite.Sprite):
         self.acc = vec(0, PLAYER_GRAVITY)
 
         # Move the player left and right.
-        self.move_test()
+        self.controller.move_test()
 
         # Instill friction into movement.
         self.acc.x += self.vel.x * PLAYER_FRICTION
