@@ -1,11 +1,16 @@
-## Welcome to GitHub Pages
+# Platfrogs : The Floating Frog Platformer
+By Charlotte Ramiro de Huelbes and Vedaant Kuchhal
 
-You can use the [editor on GitHub](https://github.com/olincollege/PlatFrogerGame/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+## The Big Idea
+  In Platfrogs, you play as a small frog with big dreams of taking to the sky- so, with the help of some floating lilypads, you take to the skies to see how high you can go. 
+  
+  The aim of this project was to create a frog-themed vertical platformer game. We decided to do this type of game because platformers are very nostalgic and familiar to us (having played games like Doodle Jump and Super Mario Bros in our childhoods), and we wanted to look further into how one was programmed. Furthermore, we both think frogs are quite cute and are known for hopping, hence we decided to make them the theme of the game. Finally, another reason why we chose to go with a platformer is because we wanted to gain some familiarity with the PyGame library, and we knew that creating platfromer games would be a great way to explore its features within the scope of a 2 week project.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
+## Gameplay
 
+
+## Other stuff i'll be deleting
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
 ```markdown
